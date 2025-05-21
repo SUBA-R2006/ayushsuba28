@@ -1,0 +1,101 @@
+<!-- startup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Startup Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-overlay">
+    <div class="container">
+      <h1>Startup Dashboard</h1>
+      <p>You can now chat with investors who've contacted you.</p>
+
+      <label for="companyName">Select Your Company:</label>
+      <select id="startupSelector">
+        <option value="">-- Select Company --</option>
+      </select>
+
+      <div id="chatContainer" style="display:none; margin-top: 20px;">
+        <div id="chatBox" style="height: 200px; overflow-y: auto; background: #f1f1f1; padding: 10px; border-radius: 10px;"></div>
+        <input type="text" id="chatInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+      <div id="notification" style="display:none; background: #f8d7da; padding: 10px; margin-top: 20px; border-radius: 5px;">
+        <strong>New message!</strong> An investor has selected your company to chat.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const companies = JSON.parse(localStorage.getItem("registeredCompanies")) || [];
+    const startupSelector = document.getElementById("startupSelector");
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const chatContainer = document.getElementById("chatContainer");
+    const notification = document.getElementById("notification");
+
+    companies.forEach(company => {
+      const option = document.createElement("option");
+      option.value = company.name;
+      option.textContent = company.name;
+      startupSelector.appendChild(option);
+    });
+
+    startupSelector.addEventListener("change", () => {
+      const selected = startupSelector.value;
+      if (selected) {
+        chatContainer.style.display = "block";
+        loadMessages(selected);
+        notifyStartup(selected);
+      } else {
+        chatContainer.style.display = "none";
+      }
+    });
+
+    function sendMessage() {
+      const startup = startupSelector.value;
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+
+      const chatKey = `chat_${startup}`;
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+
+      messages.push({ sender: "Startup", message: msg });
+      localStorage.setItem(chatKey, JSON.stringify(messages));
+      chatInput.value = "";
+      loadMessages(startup);
+    }
+
+    function loadMessages(startup) {
+      const chatKey = `chat_${startup}`;
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+
+      chatBox.innerHTML = "";
+      messages.forEach(msg => {
+        const msgDiv = document.createElement("div");
+        msgDiv.textContent = `${msg.sender}: ${msg.message}`;
+        msgDiv.style.marginBottom = "5px";
+        chatBox.appendChild(msgDiv);
+      });
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function notifyStartup(startup) {
+      const key = `startup_notified_${startup}`;
+      const status = localStorage.getItem(key);
+
+      if (status === "false") {
+        notification.style.display = "block";
+        localStorage.setItem(key, "true");
+        setTimeout(() => {
+          notification.style.display = "none";
+        }, 5000);
+      }
+    }
+  </script>
+</body>
+</html>

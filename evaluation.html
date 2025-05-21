@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayush Startup Portal - Qualification Verification</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('Ayush (2).jpeg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
+        .form-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-box input,
+        .form-box select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-box button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+        }
+        .form-box button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-box">
+        <h2>Qualification Verification</h2>
+        <form id="qualificationForm">
+            <input type="number" id="age" placeholder="Enter Your Age" required><br>
+            <select id="degree" required>
+                <option value="">Select Degree</option>
+                <option value="BAMS">BAMS</option>
+                <option value="BHMS">BHMS</option>
+                <option value="BUMS">BUMS</option>
+                <option value="BSMS">BSMS</option>
+                <option value="Registered Practitioner">Registered Ayush Practitioner</option>
+            </select>
+            <input type="text" id="socialService" placeholder="Social Service Description (if any)" required><br>
+            <label>Aadhaar Card Upload:</label>
+            <input type="file" id="aadharUpload" accept="application/pdf,image/*" required><br>
+            <label>Degree Certificate Upload:</label>
+            <input type="file" id="degreeUpload" accept="application/pdf,image/*" required><br>
+            <button type="submit">Submit for Evaluation</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('qualificationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const age = parseInt(document.getElementById('age').value);
+        const degree = document.getElementById('degree').value;
+        
+        if (age < 21 || age > 65) {
+            alert("Age must be between 21 and 65 years.");
+            return;
+        }
+
+        if (!degree) {
+            alert("Please select a valid degree.");
+            return;
+        }
+
+        // Redirect directly to confirmation page
+        window.location.href = "evaluation_confirmation.html";
+    });
+</script>
+</body>
+</html>

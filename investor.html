@@ -1,0 +1,113 @@
+<!-- investor.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investor - Registered Companies</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-overlay">
+    <div class="container">
+      <h1>Investor Dashboard</h1>
+
+      <!-- List of Registered Companies -->
+      <div id="startupList"></div>
+
+      <!-- Chatbot Section -->
+      <div id="chatSection">
+        <h2>Chat with a Startup</h2>
+        <label for="startupSelector">Select Startup:</label>
+        <select id="startupSelector">
+          <option value="">-- Choose Company --</option>
+        </select>
+
+        <div id="chatBox"></div>
+
+        <div style="display: flex; align-items: center;">
+          <input type="text" id="chatInput" placeholder="Type your message..." />
+          <button id="sendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const companies = JSON.parse(localStorage.getItem("registeredCompanies")) || [];
+    const startupList = document.getElementById("startupList");
+    const startupSelector = document.getElementById("startupSelector");
+    const chatSection = document.getElementById("chatSection");
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let selectedStartup = "";
+
+    companies.forEach(company => {
+      const card = document.createElement("div");
+      card.className = "company-card";
+      card.innerHTML = `
+        <h3>${company.name}</h3>
+        <p>Email: ${company.email}</p>
+        <p>Industry: ${company.industry}</p>
+        <p><a href="${company.document}" target="_blank">View Document</a></p>
+        <button onclick="supportStartup('${company.name}')">Support</button>
+      `;
+      startupList.appendChild(card);
+
+      const option = document.createElement("option");
+      option.value = company.name;
+      option.textContent = company.name;
+      startupSelector.appendChild(option);
+    });
+
+    startupSelector.addEventListener("change", () => {
+      selectedStartup = startupSelector.value;
+      if (selectedStartup) {
+        chatSection.style.display = "block";
+        localStorage.setItem("chatWithStartup", selectedStartup);
+        loadMessages();
+      } else {
+        chatSection.style.display = "none";
+        chatBox.innerHTML = "";
+      }
+    });
+
+    sendBtn.addEventListener("click", () => {
+      const msg = chatInput.value.trim();
+      if (!msg || !selectedStartup) return;
+
+      const chatKey = `chat_${selectedStartup}`;
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+
+      messages.push({ sender: "Investor", message: msg });
+      localStorage.setItem(chatKey, JSON.stringify(messages));
+      localStorage.setItem(`startup_notified_${selectedStartup}`, "false");
+
+      chatInput.value = "";
+      loadMessages();
+    });
+
+    function loadMessages() {
+      const chatKey = `chat_${selectedStartup}`;
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+
+      chatBox.innerHTML = "";
+      messages.forEach(msg => {
+        const msgDiv = document.createElement("div");
+        msgDiv.textContent = `${msg.sender}: ${msg.message}`;
+        msgDiv.style.marginBottom = "6px";
+        chatBox.appendChild(msgDiv);
+      });
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function supportStartup(startupName) {
+      localStorage.setItem("chatWithStartup", startupName);
+      window.location.href = "chat.html";
+    }
+  </script>
+</body>
+</html>

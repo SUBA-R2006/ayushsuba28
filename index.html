@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYUSH Startup Portal - Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .link-group {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .link-group a {
+      color: #007BFF;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .link-group a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-overlay">
+    <div class="container">
+      <header>
+        <h1>AYUSH Startup Portal</h1>
+      </header>
+
+      <section id="auth" class="form-section">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="password" id="password" placeholder="Password" required>
+          <select id="role" required style="height: 44px; font-size: 16px;">
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="investor">Investor</option>
+            <option value="startup">Startup</option>
+          </select>
+          <button type="submit">Login</button>
+        </form>
+
+        <div class="link-group">
+          <p>
+            Already registered? <a href="chat.html">Go to Chat</a>
+          </p>
+          <p>
+            New to registration? <a href="indices.html">Register Here</a>
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        <p>&copy; 2025 AYUSH Startup Portal</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // prevent page reload
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const role = document.getElementById("role").value;
+
+      const credentials = {
+        admin: "admin123",
+        investor: "invest456"
+      };
+
+      if (role === "admin" && password === credentials.admin) {
+        localStorage.setItem("userRole", "admin");
+        window.location.href = "admin.html"; // Redirect to admin page
+      } else if (role === "investor" && password === credentials.investor) {
+        localStorage.setItem("userRole", "investor");
+        window.location.href = "investor.html"; // Redirect to investor page
+      } else if (role === "startup") {
+        alert("Startup role needs registration.");
+        window.location.href = "indices.html"; // Redirect to registration page for startups
+      } else {
+        alert("Invalid credentials. Please check the role or password.");
+      }
+    });
+  </script>
+</body>
+</html>

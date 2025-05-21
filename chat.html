@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat with Startup</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #chatBox {
+      height: 300px;
+      overflow-y: auto;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    #chatInput {
+      width: calc(100% - 80px);
+      padding: 10px;
+    }
+
+    #sendBtn {
+      padding: 10px 16px;
+      margin-left: 6px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #sendBtn:hover {
+      background-color: #45a049;
+    }
+
+    .message {
+      margin-bottom: 8px;
+    }
+
+    .message.investor {
+      color: #333;
+    }
+
+    .message.startup {
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>Chat with Startup: <span id="startupName"></span></h2>
+    <div id="chatBox"></div>
+
+    <div style="display: flex; align-items: center;">
+      <input type="text" id="chatInput" placeholder="Type your message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const startupName = localStorage.getItem("chatWithStartup");
+    const userRole = localStorage.getItem("userRole"); // e.g., "startup" or "investor"
+
+    if (!startupName) {
+      alert("No startup selected. Redirecting...");
+      window.location.href = "investor.html";
+    }
+
+    document.getElementById("startupName").textContent = startupName;
+
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const chatKey = `chat_${startupName}`;
+
+    function loadMessages() {
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+      chatBox.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = `message ${msg.sender.toLowerCase()}`;
+        div.textContent = `${msg.sender}: ${msg.message}`;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    sendBtn.addEventListener("click", () => {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+      const sender = userRole === "startup" ? "Startup" : "Investor";
+
+      messages.push({ sender: sender, message: msg });
+      localStorage.setItem(chatKey, JSON.stringify(messages));
+
+      // Notify the other party
+      if (userRole === "investor") {
+        localStorage.setItem(`startup_notified_${startupName}`, "false");
+      } else if (userRole === "startup") {
+        localStorage.setItem(`investor_notified_${startupName}`, "false");
+      }
+
+      chatInput.value = "";
+      loadMessages();
+
+      // Redirect after 1 second
+      setTimeout(() => {
+        if (userRole === "investor") {
+          window.location.href = "investor.html";
+        } else if (userRole === "startup") {
+          window.location.href = "startup.html";
+        }
+      }, 1000);
+    });
+
+    loadMessages();
+  </script>
+</body>
+</html>

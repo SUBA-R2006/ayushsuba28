@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-overlay">
+    <div class="container">
+      <h1>Admin Dashboard</h1>
+      <p>Welcome Admin! Here are the details of all registered startups:</p>
+
+      <div id="startupDetails">
+        <!-- Startup details will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const companies = JSON.parse(localStorage.getItem("registeredCompanies")) || [];
+    const startupDetails = document.getElementById("startupDetails");
+
+    companies.forEach(company => {
+      const companyDiv = document.createElement("div");
+      companyDiv.classList.add("company-card");
+      companyDiv.innerHTML = `
+        <h3>${company.name}</h3>
+        <p>Email: ${company.email}</p>
+        <p>Industry: ${company.industry}</p>
+        <a href="${company.document}" target="_blank">View Document</a>
+      `;
+      startupDetails.appendChild(companyDiv);
+    });
+  </script>
+</body>
+</html>

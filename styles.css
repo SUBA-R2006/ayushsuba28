@@ -1,0 +1,81 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('Ayush (2).jpeg'); /* Add your background image */
+  background-size: cover;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+header {
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 2em;
+  color: #ffcc00;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  font-size: 1em;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 0.8em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+#statusMessage {
+  font-size: 1.2em;
+  color: yellow;
+}
+
+#backToRegistration {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #ffcc00;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+#backToRegistration:hover {
+  background-color: #e6b800;
+}
